@@ -1,5 +1,6 @@
 #pragma once
-#include <iostream>
+#include "Context/EngineRuntimeContext.h"
+
 namespace XHuang
 {
 class Engine
@@ -7,7 +8,9 @@ class Engine
 public:
     Engine(/* args */);
     ~Engine();
-    static void HelloWorld();
+    void Initialize(EngineRuntimeContext& context);
+    bool Start();
+    void ShutDown();
 };
 
 }

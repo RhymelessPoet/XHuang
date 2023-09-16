@@ -20,3 +20,9 @@ target_include_directories(
 )
 
 message("-- ${ENGINE_SOURCE_DIR}/Runtime")
+
+### Vulkan
+if (Vulkan_FOUND)
+  target_include_directories(${TARGET_NAME} PUBLIC Vulkan_INCLUDE_DIRS)
+  target_link_libraries(${TARGET_NAME} PUBLIC Vulkan::Vulkan)
+endif()

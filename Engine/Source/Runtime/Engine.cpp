@@ -2,16 +2,23 @@
 
 namespace XHuang
 {
-
-void Engine::HelloWorld()
-{
-    std::cout << "Hello World!" << std::endl;
-}
 Engine::Engine()
 {
 }
 
 Engine::~Engine()
+{
+}
+
+void Engine::Initialize(EngineRuntimeContext& context)
+{
+    context.InitializeModules();
+}
+bool Engine::Start()
+{
+    return false;
+}
+void Engine::ShutDown()
 {
 }
 }
