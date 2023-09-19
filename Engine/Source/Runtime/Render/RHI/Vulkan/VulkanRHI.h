@@ -1,6 +1,6 @@
 #pragma once
-#include "RHI.h"
-#include <vulkan/vulkan.h>
+#include "VulKanDevice.h"
+#include "Render/RHI/RHI.h"
 
 namespace XHuang
 {
@@ -14,10 +14,12 @@ namespace XHuang
     private:
         void BuildApplicationInfo(const RHI_InitInfo& rhiInfo, VkApplicationInfo& outAppInfo);
         void CreateInstance(const VkApplicationInfo& appInfo);
-        void InitializePhysicalDevice();
-
+        void InitializeDevice();
+        void CreateLogicalDevice();
+        
     public:
-        VkInstance mInstance{nullptr};
+        VkInstance      mInstance{nullptr};
+        VulkanDevice    mDevice;
     };
     
 }

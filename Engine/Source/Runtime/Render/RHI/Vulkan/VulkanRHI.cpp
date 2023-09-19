@@ -3,7 +3,7 @@
 namespace XHuang
 {
 
-VulkanRHI::VulkanRHI()
+VulkanRHI::VulkanRHI() : mDevice(VulkanDevice())
 {
     mRHI_API_Version = VK_API_VERSION_1_0;
 }
@@ -17,7 +17,7 @@ void VulkanRHI::Initialize(const RHI_InitInfo& rhiInfo)
     VkApplicationInfo appInfo{};
     BuildApplicationInfo(rhiInfo, appInfo);
     CreateInstance(appInfo);
-    InitializePhysicalDevice();
+    InitializeDevice();
 }
 
 void VulkanRHI::BuildApplicationInfo(const RHI_InitInfo& rhiInfo, VkApplicationInfo& outAppInfo)
@@ -48,22 +48,24 @@ void VulkanRHI::CreateInstance(const VkApplicationInfo& appInfo)
     }
 }
 
-void VulkanRHI::InitializePhysicalDevice()
+void VulkanRHI::InitializeDevice()
 {
     UInt32 physicalDeviceCount = 0;
     vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, nullptr);
     if (physicalDeviceCount > 0) {
         Vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
         vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, physicalDevices.data());
-        for (const auto& device : physicalDevices) {
-            VkPhysicalDeviceProperties physicalDeviceProperties;
-            vkGetPhysicalDeviceProperties(device, &physicalDeviceProperties);
-            int score = 0;
+        if (mDevice.PickPhysicalDevice(physicalDevices)) {
+            mDevice.InitializeLogicalDevice();
+        } else {
+            
         }
     }
-    else {
+}
 
-    }
+void XHuang::VulkanRHI::CreateLogicalDevice()
+{
+
 }
 
 } // namespace XHuang
