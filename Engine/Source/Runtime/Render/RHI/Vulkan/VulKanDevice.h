@@ -1,5 +1,4 @@
 #pragma once
-#include <vulkan/vulkan.h>
 #include "Base/Base.h"
 #include "VkForwardDeclaration.h"
 
@@ -14,6 +13,7 @@ public:
     ~VulkanDevice();
     bool PickPhysicalDevice(const Vector<VkPhysicalDevice>& devices);
     void InitializeLogicalDevice();
+    void ResetLogicalDevice(VkAllocationCallbacks* allocator = nullptr);
 
 private:
     struct QueueFamilyIndices

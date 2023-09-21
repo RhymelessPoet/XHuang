@@ -4,5 +4,6 @@ set(ENGINE_SOURCE_DIR "${ENGINE_ROOT_DIR}/Source")
 ### Vulkan
 find_package(Vulkan REQUIRED)
 
+add_subdirectory(3rdparty)
 add_subdirectory(Source/Runtime)
 add_subdirectory(Source/Editor)

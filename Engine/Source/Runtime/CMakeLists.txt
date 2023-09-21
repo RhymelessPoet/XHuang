@@ -21,6 +21,9 @@ target_include_directories(
 
 message("-- ${ENGINE_SOURCE_DIR}/Runtime")
 
+### glfw
+target_link_libraries(${TARGET_NAME} PUBLIC glfw)
+
 ### Vulkan
 if (Vulkan_FOUND)
   target_include_directories(${TARGET_NAME} PUBLIC Vulkan_INCLUDE_DIRS)

@@ -9,8 +9,9 @@ class VulkanQueue
 public:
     VulkanQueue(VkDevice device) : mParentDevice(device) { };
     ~VulkanQueue();
-    void Initialize(UInt32 queueFamilyIndex, UInt32 queueIndex);
     bool IsComplete() const { return mVulkanQueue.has_value(); }
+    void Initialize(UInt32 queueFamilyIndex, UInt32 queueIndex);
+    void Reset();
 
 private:
     Optional<VkDevice> mParentDevice; 

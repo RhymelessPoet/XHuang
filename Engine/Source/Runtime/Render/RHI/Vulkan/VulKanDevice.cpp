@@ -80,6 +80,11 @@ void VulkanDevice::InitializeLogicalDevice()
     }
 }
 
+void VulkanDevice::ResetLogicalDevice(VkAllocationCallbacks* allocator)
+{
+    vkDestroyDevice(mLogicalDevice.value(), allocator);
+}
+
 void VulkanDevice::GetQueueFamilyIndices(const VkPhysicalDevice &device, QueueFamilyIndices &indices)
 {
     UInt32 queueFamilyCount = 0;
