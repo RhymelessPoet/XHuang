@@ -1,6 +1,7 @@
 #pragma once
 #include "Base/Base.h"
 #include "VkForwardDeclaration.h"
+#include "VulkanSwapchain.h"
 
 namespace XHuang
 {
@@ -11,9 +12,12 @@ public:
     VulkanDevice() = default;
     VulkanDevice(const VkPhysicalDevice& physicalDevice) : mPhysicalDevice(physicalDevice) {}
     ~VulkanDevice();
-    bool PickPhysicalDevice(const Vector<VkPhysicalDevice>& devices);
+    bool PickPhysicalDevice(const Vector<VkPhysicalDevice>& devices, VulkanSurfaceSPtr surface = nullptr);
     void InitializeLogicalDevice();
     void ResetLogicalDevice(VkAllocationCallbacks* allocator = nullptr);
+    bool GetSwapchainSupportDetails(VulkanSwapchain::SupportDetails& details);
+    VkDevice GetVkDevice() const { mLogicalDevice.has_value() ? mLogicalDevice.value() : VK_NULL_HANDLE; }
+    bool IsSupportPresent() const { return mQueueFamilyIndices.PresentFamily.has_value(); }
 
 private:
     struct QueueFamilyIndices
@@ -40,8 +44,9 @@ private:
     bool IsSwapChainAdequate(const VkPhysicalDevice& device);
     
     bool IsComplete() const { return mPhysicalDevice.has_value() && mLogicalDevice.has_value(); }
-
+    
 private:
+    VulkanSurfaceSPtr          mSurface;
     Optional<VkPhysicalDevice> mPhysicalDevice;
     Optional<VkDevice>         mLogicalDevice;
     QueueFamilyIndices         mQueueFamilyIndices;

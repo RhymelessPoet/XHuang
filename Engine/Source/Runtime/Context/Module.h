@@ -2,7 +2,7 @@
 
 namespace XHuang
 {
-class Module
+class IModule
 {
 public:
     virtual void Initialize() = 0;

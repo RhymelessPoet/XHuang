@@ -1,4 +1,5 @@
 #include "VulkanQueue.h"
+#include "VulkanDevice.h"
 
 namespace XHuang
 {
@@ -8,13 +9,18 @@ namespace XHuang
 
     void VulkanQueue::Initialize(UInt32 queueFamilyIndex, UInt32 queueIndex)
     {
-        ASSERT(mParentDevice.has_value())
+        ASSERT(mParentDevice.lock() != nullptr)
         VkQueue vkQueue;
-        vkGetDeviceQueue(mParentDevice.value(), queueFamilyIndex, queueIndex, &vkQueue);
+        vkGetDeviceQueue(mParentDevice.lock()->GetVkDevice(), queueFamilyIndex, queueIndex, &vkQueue);
         if (vkQueue == VK_NULL_HANDLE) {
             return;
         }
         mVulkanQueue = vkQueue;
+    }
+
+    void VulkanQueue::Reset()
+    {
+        
     }
 
 } // namespace XHuang

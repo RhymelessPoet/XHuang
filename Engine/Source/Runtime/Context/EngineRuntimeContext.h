@@ -10,9 +10,9 @@ public:
     EngineRuntimeContext() = default;
     ~EngineRuntimeContext() = default;
     void InitializeModules();
-    EngineRuntimeContext& AddModule(ModuleSPtr&& module);
+    EngineRuntimeContext& AddModule(IModuleSPtr&& module);
 
 private:
-    Vector<ModuleSPtr> mModules;
+    Vector<IModuleSPtr> mModules;
 };
 }

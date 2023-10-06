@@ -15,4 +15,5 @@
 #define CLASS_DECLARE(name) class name;
 #define CLASS_SHAREDPTR_DECLARE(name) \
     class name; \
-    using name##SPtr = std::shared_ptr<name>;
+    using name##SPtr = std::shared_ptr<name>; \
+    using name##WSPtr = std::weak_ptr<name>;

@@ -1,5 +1,6 @@
 #include "VulKanDevice.h"
 #include "VulkanQueue.h"
+#include "VulkanSurface.h"
 
 namespace XHuang
 {
@@ -7,8 +8,11 @@ VulkanDevice::~VulkanDevice()
 {
 }
 
-bool VulkanDevice::PickPhysicalDevice(const Vector<VkPhysicalDevice> &devices)
+bool VulkanDevice::PickPhysicalDevice(const Vector<VkPhysicalDevice> &devices, VulkanSurfaceSPtr surface)
 {
+    if (surface != nullptr) {
+        mSurface = surface;
+    }
     Vector<VkPhysicalDevice> discreteDevices{};
     Vector<VkPhysicalDevice> integratedDevices{};
     for (const auto& device : devices) {
@@ -85,6 +89,44 @@ void VulkanDevice::ResetLogicalDevice(VkAllocationCallbacks* allocator)
     vkDestroyDevice(mLogicalDevice.value(), allocator);
 }
 
+bool VulkanDevice::GetSwapchainSupportDetails(VulkanSwapchain::SupportDetails &details)
+{
+    if (mSurface != nullptr) {
+        VkSurfaceKHR surface = mSurface->GetSurface();
+        VkResult result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(mPhysicalDevice.value(), surface, &details.Capabilities);
+        if (result != VK_SUCCESS) {
+            // log
+            return false;
+        }
+        UInt32 frameCount = 0;
+        vkGetPhysicalDeviceSurfaceFormatsKHR(mPhysicalDevice.value(), surface, &frameCount, nullptr);
+        if (frameCount > 0) {
+            result = VK_RESULT_MAX_ENUM;
+            details.Formats.resize(frameCount);
+            result = vkGetPhysicalDeviceSurfaceFormatsKHR(mPhysicalDevice.value(), surface, &frameCount, details.Formats.data());
+        }
+        if (result != VK_SUCCESS) {
+            // log
+            return false;
+        }
+        UInt32 presentModeCount = 0;
+        vkGetPhysicalDeviceSurfacePresentModesKHR(mPhysicalDevice.value(), surface, &presentModeCount, nullptr);
+        if (presentModeCount > 0) {
+            result = VK_RESULT_MAX_ENUM;
+            details.PresentModes.resize(presentModeCount);
+            result = vkGetPhysicalDeviceSurfacePresentModesKHR(mPhysicalDevice.value(), surface, &presentModeCount, details.PresentModes.data());
+        }
+        if (result != VK_SUCCESS) {
+            // log
+            return false;
+        }
+        details.GraphicsFamilyIndex = mQueueFamilyIndices.GraphicsFamily;
+        details.PresentFamilyIndex  = mQueueFamilyIndices.PresentFamily;
+    }
+    // log
+    return false;
+}
+
 void VulkanDevice::GetQueueFamilyIndices(const VkPhysicalDevice &device, QueueFamilyIndices &indices)
 {
     UInt32 queueFamilyCount = 0;
@@ -103,8 +145,17 @@ void VulkanDevice::GetQueueFamilyIndices(const VkPhysicalDevice &device, QueueFa
             indices.ComputeFamily = idx;
         }
 
-        indices.PresentFamily = queueFamilyCount - 1; //to do
-
+        if (mSurface != nullptr) {
+            VkBool32 isPresentSupport = false;
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, idx, mSurface->GetSurface(), &isPresentSupport);
+            if (isPresentSupport) {
+                indices.PresentFamily = idx;
+            }
+        }
+        else {
+            indices.PresentFamily = - 1;
+        }
+        
         if (indices.IsComplete()) {
             break;
         }

@@ -5,7 +5,7 @@
 namespace XHuang
 {
 
-class RenderModule : public Module
+class RenderModule : public IModule
 {
 public:
     RenderModule(/* args */) = default;

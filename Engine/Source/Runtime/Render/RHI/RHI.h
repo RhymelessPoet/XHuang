@@ -1,17 +1,20 @@
 #pragma once
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+
 #include "Base/Base.h"
 #include "Base/String.h"
+#include "Window/Window.h"
 
 namespace XHuang
 {
+
 struct RHI_InitInfo
 {
-    UInt32 mApplicationVersion;
-    String mApplicationName;
-    UInt32 mEngineVersion;
-    String mEngineName = "XHuang";
+    UInt32  ApplicationVersion;
+    String  ApplicationName;
+    UInt32  EngineVersion;
+    String  EngineName = "XHuang";
+    WindowSPtr Window = nullptr;
+    
 };
 
 class RHI

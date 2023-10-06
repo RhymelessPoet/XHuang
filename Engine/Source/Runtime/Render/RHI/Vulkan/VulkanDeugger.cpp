@@ -31,7 +31,8 @@ void VulkanDebugger::Initialize(VkInstance instance, const VkAllocationCallbacks
 
 void VulkanDebugger::Reset(VkInstance instance, const VkAllocationCallbacks *allocator)
 {
-     auto DestroyFunc = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "PFN_vkDestroyDebugUtilsMessengerEXT");
+    ASSERT(mDebugMessenger.has_value())
+    auto DestroyFunc = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "PFN_vkDestroyDebugUtilsMessengerEXT");
     if (DestroyFunc != nullptr) {
         DestroyFunc(instance, mDebugMessenger.value(), allocator);
         mDebugMessenger.reset();

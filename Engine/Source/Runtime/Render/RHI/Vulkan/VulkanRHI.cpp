@@ -1,11 +1,18 @@
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
 #include "VulkanRHI.h"
+#include "Window/Window.h"
 
 namespace XHuang
 {
 
-VulkanRHI::VulkanRHI() : mDevice(VulkanDevice()), mDebugger(VulkanDebugger())
+VulkanRHI::VulkanRHI()
 {
     mRHI_API_Version = VK_API_VERSION_1_0;
+    mDevice = MakeShared<VulkanDevice>();
+    mDebugger = MakeShared<VulkanDebugger>();
+    mSurface = MakeShared<VulkanSurface>();
+    mSwapchain = MakeShared<VulkanSwapchain>();
 }
 
 VulkanRHI::~VulkanRHI()
@@ -22,18 +29,23 @@ void VulkanRHI::Initialize(const RHI_InitInfo& rhiInfo)
     VkApplicationInfo appInfo{};
     PopulateApplicationInfo(rhiInfo, appInfo);
     CreateInstance(appInfo);
+    if (rhiInfo.Window != nullptr) {
+        mSurface->Initialize(mInstance.value(), rhiInfo.Window);
+    }
     InitializeDevice();
     if (mEnableValidationLayers) {
-        mDebugger.Initialize(mInstance.value());
+        mDebugger->Initialize(mInstance.value());
     }
-    
+    if (mDevice->IsSupportPresent()) {
+        InitializeSwapchain();
+    }
 }
 
 void VulkanRHI::Reset()
 {
-    mDevice.ResetLogicalDevice();
+    mDevice->ResetLogicalDevice();
     if (mEnableValidationLayers) {
-        mDebugger.Reset(mInstance.value());
+        mDebugger->Reset(mInstance.value());
     }
     vkDestroyInstance(mInstance.value(), nullptr);
 }
@@ -42,10 +54,10 @@ void VulkanRHI::PopulateApplicationInfo(const RHI_InitInfo& rhiInfo, VkApplicati
 {
     outAppInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     outAppInfo.pNext              = nullptr;
-    outAppInfo.pApplicationName   = rhiInfo.mApplicationName.c_str();
-    outAppInfo.applicationVersion = rhiInfo.mApplicationVersion;
-    outAppInfo.pEngineName        = rhiInfo.mEngineName.c_str();
-    outAppInfo.engineVersion      = rhiInfo.mEngineVersion;
+    outAppInfo.pApplicationName   = rhiInfo.ApplicationName.c_str();
+    outAppInfo.applicationVersion = rhiInfo.ApplicationVersion;
+    outAppInfo.pEngineName        = rhiInfo.EngineName.c_str();
+    outAppInfo.engineVersion      = rhiInfo.EngineVersion;
     outAppInfo.apiVersion         = mRHI_API_Version;
 }
 
@@ -98,7 +110,7 @@ void VulkanRHI::CreateInstance(const VkApplicationInfo& appInfo)
             return retLayers;
         };
         VkDebugUtilsMessengerCreateInfoEXT debugMesengerCreateInfo{};
-        mDebugger.PopulateDebugMessengerCreateInfo(debugMesengerCreateInfo);
+        mDebugger->PopulateDebugMessengerCreateInfo(debugMesengerCreateInfo);
         validationLayers = ToCStringVector(mValidationLayers);
         instanceCreateInfo.enabledLayerCount   = mValidationLayers.size();
         instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
@@ -124,17 +136,20 @@ void VulkanRHI::InitializeDevice()
     if (physicalDeviceCount > 0) {
         Vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
         vkEnumeratePhysicalDevices(mInstance.value(), &physicalDeviceCount, physicalDevices.data());
-        if (mDevice.PickPhysicalDevice(physicalDevices)) {
-            mDevice.InitializeLogicalDevice();
+        if (mDevice->PickPhysicalDevice(physicalDevices, mSurface)) {
+            mDevice->InitializeLogicalDevice();
         } else {
             
         }
     }
 }
 
-void XHuang::VulkanRHI::CreateLogicalDevice()
+void VulkanRHI::InitializeSwapchain()
 {
-
+    VulkanSwapchain::SupportDetails details;
+    if (mDevice->GetSwapchainSupportDetails(details)) {
+        mSwapchain->Initialize(mDevice, mSurface, details);
+    }
 }
 
 } // namespace XHuang

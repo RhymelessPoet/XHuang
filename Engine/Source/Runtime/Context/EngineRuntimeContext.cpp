@@ -12,7 +12,7 @@ void EngineRuntimeContext::InitializeModules()
     }
 }
 
-EngineRuntimeContext& EngineRuntimeContext::AddModule(ModuleSPtr&& module)
+EngineRuntimeContext& EngineRuntimeContext::AddModule(IModuleSPtr&& module)
 {
     mModules.push_back(std::move(module));
     return *this;
