@@ -1,0 +1,29 @@
+#pragma once
+#include "Base/Macro.h"
+#include <vulkan/vulkan.h>
+
+namespace XHuang
+{
+CLASS_SHAREDPTR_DECLARE(VulkanRHI)
+CLASS_SHAREDPTR_DECLARE(VulkanDevice)
+CLASS_SHAREDPTR_DECLARE(VulkanQueue)
+CLASS_SHAREDPTR_DECLARE(VulkanDebugger)
+CLASS_SHAREDPTR_DECLARE(VulkanSurface)
+CLASS_SHAREDPTR_DECLARE(VulkanSwapchain)
+
+CLASS_SHAREDPTR_DECLARE(VulkanContext)
+CLASS_SHAREDPTR_DECLARE(VulkanGraphicsPipeline)
+CLASS_SHAREDPTR_DECLARE(VulkanPipelineLayout)
+CLASS_SHAREDPTR_DECLARE(VulkanRenderPass)
+CLASS_SHAREDPTR_DECLARE(VulkanShader)
+
+CLASS_SHAREDPTR_DECLARE(VulkanFrameBuffer)
+CLASS_SHAREDPTR_DECLARE(VulkanImage)
+CLASS_SHAREDPTR_DECLARE(VulkanImageView)
+CLASS_SHAREDPTR_DECLARE(VulkanSemaphore)
+CLASS_SHAREDPTR_DECLARE(VulkanFence)
+
+CLASS_SHAREDPTR_DECLARE(VulkanCommandPool)
+CLASS_SHAREDPTR_DECLARE(VulkanCommandBuffer)
+
+} // namespace XHuang

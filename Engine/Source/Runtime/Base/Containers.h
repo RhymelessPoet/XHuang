@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <list>
 #include <forward_list>
+#include <tuple>
 #include <memory>
 
 namespace XHuang
@@ -35,5 +36,8 @@ template <typename T>
 using UnorderedSet = std::unordered_set<T>;
 template <typename T>
 using UnorderedMultiSet = std::unordered_multiset<T>;
+
+template <typename Head, typename ...Tail>
+using Tuple = std::tuple<Head, Tail...>;
 
 } // namespace XHuang

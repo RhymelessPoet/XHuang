@@ -9,12 +9,16 @@ namespace XHuang
 {
     template <typename T>
     using Optional = std::optional<T>;
+    template <typename T>
+    using Handle = std::shared_ptr<T>;
+    template <typename T>
+    using Ref = std::weak_ptr<T>;
 }  // namespace XHuang
 
 namespace XHuang
 {
     template <typename T, typename... Args>
-    auto MakeShared(Args&&... args) -> decltype(std::make_shared<T>(std::forward<Args>(args)...))
+    auto MakeHandle(Args&&... args) -> decltype(std::make_shared<T>(std::forward<Args>(args)...))
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }

@@ -3,17 +3,17 @@
 #endif
 
 #ifndef NDEBUG
-#define ASSERT(statement) assert(statement);
+#define XH_ASSERT(statement) assert(statement);
 #else
-#define ASSERT(statement)
+#define XH_ASSERT(statement)
 #endif
 
-#define STATIC_ASSERT(statement) std::static_assert(statement);
+#define XH_STATIC_ASSERT(statement) std::static_assert(statement);
 
 #include <memory>
 
 #define CLASS_DECLARE(name) class name;
 #define CLASS_SHAREDPTR_DECLARE(name) \
     class name; \
-    using name##SPtr = std::shared_ptr<name>; \
-    using name##WSPtr = std::weak_ptr<name>;
+    using name##Handle = std::shared_ptr<name>; \
+    using name##Ref = std::weak_ptr<name>;

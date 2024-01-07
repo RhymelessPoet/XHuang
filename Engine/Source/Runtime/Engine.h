@@ -10,6 +10,7 @@ public:
     ~Engine();
     void Initialize(EngineRuntimeContext& context);
     bool Start();
+    bool Run(EngineRuntimeContext& context);
     void ShutDown();
 };
 

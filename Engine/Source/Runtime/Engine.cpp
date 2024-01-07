@@ -18,6 +18,11 @@ bool Engine::Start()
 {
     return false;
 }
+bool Engine::Run(EngineRuntimeContext& context)
+{
+    context.Update();
+    return true;
+}
 void Engine::ShutDown()
 {
 }

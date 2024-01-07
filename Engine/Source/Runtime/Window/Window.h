@@ -21,6 +21,7 @@ public:
     Window() = default;
     ~Window();
     void Initialize(const WindowCreateInfo& windowInfo);
+    bool ShouldExit();
     GLFWwindow* GetGLFWwindow() const { return mWindow; }
     UInt32 GetWindowWidth() const { return mWidth; }
     UInt32 GetWindowHeight() const { return mHeight; }

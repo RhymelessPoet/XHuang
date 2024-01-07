@@ -2,10 +2,6 @@
 
 namespace XHuang
 {
-XHuang::Window::Window()
-{
-    
-}
 Window::~Window()
 {
     if (mWindow != nullptr) {
@@ -33,11 +29,16 @@ void Window::Initialize(const WindowCreateInfo &windowInfo)
     mIsFullScreen = windowInfo.IsFullScreen;
 }
 
+bool Window::ShouldExit()
+{
+    return mWindow == nullptr ? true : glfwWindowShouldClose(mWindow);
+}
+
 void Window::Reset()
 {
-     if (mWindow != nullptr) {
+    if (mWindow != nullptr) {
         glfwDestroyWindow(mWindow);
-        glfwTerminate(); 
+        glfwTerminate();
     }
 }
 
